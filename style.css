@@ -79,3 +79,23 @@ input{
     margin-bottom: 10vh;
 }
 
+/********* cut preview **************/
+.cut-shape1, .cut-shape2 {
+    height : 5vh;
+    width: 30%;
+    background-color: #555;
+
+}
+
+.cut-shape2 {
+    margin-left: -5%;
+
+}
+
+.div-cut-shape {
+    display: flex;
+    margin-left: 33%;
+    padding: 15px;
+}
+
+

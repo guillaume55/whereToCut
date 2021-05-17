@@ -21,21 +21,21 @@
         }
     
         function add_bar(){
-            document.getElementById("bars-div").innerHTML += '<div class="table-responsive col-md-10 section" class="barDiv"><div class = "section-title"><div>Raw Bar </div><button class="del-button" onclick="del_entry(this)">Delete</button></div><div class ="fields"><div class="field">Length in mm <input name="length" class="barLength" value="6000"></input></div><div class="field">Height in mm<input name="height" class="barHeight" value="30"></input></div></div></div>'
+            document.getElementById("bars-div").innerHTML += '<div class="table-responsive col-md-10 section" class="barDiv" id="init_bar"><div class = "section-title"><div>Raw Bar </div><button class="del-button" onclick="del_entry(this)">Delete</button></div><div class ="fields"><div class="field">Length in mm <input name="length" class="barLength" value="6000" ></input></div><div class="field">Height in mm<input name="height" class="barHeight" value="30"></input></div></div></div>'
         }
         
         function add_cut(){
-            document.getElementById("cuts-div").innerHTML += '<div class="table-responsive col-md-10 section" class="barDiv"><div class = "section-title"><div>Bar to Cut </div><button class="del-button" onclick="del_entry(this)">Delete</button></div><div class ="fields"><div class="field">Length in mm <input name="cutLength" class="cutLength" value="300"></input></div> <div class="field">Angle 1 in deg<input name="cutAngle1" class="cutAngle1" value="90"></input></div><div class="field">Angle 1 in deg<input name="cutAngle2" class="cutAngle2" value="90"></input></div> </div></div>'
+            document.getElementById("cuts-div").innerHTML += '<div class="table-responsive col-md-10 section" class="barDiv" id="init_cut"><div class = "section-title"><div>Bar to Cut </div><button class="del-button" onclick="del_entry(this)">Delete</button></div><div class ="fields"><div class="field">Length in mm <input name="cutLength" class="cutLength" value="300"></input></div><div class="field">Angle 1 in deg<input name="cutAngle1" class="cutAngle1" value="90"></input></div><div class="field">Angle 1 in deg<input name="cutAngle2" class="cutAngle2" value="90"></input></div></div></div>'
         }
     </script>
     
     <br>
     <!----------------  BAR --------------------------->
     <div id="bars-div">
-    <div class="table-responsive col-md-10 section" class="barDiv">
+    <div class="table-responsive col-md-10 section" class="barDiv" id="init_bar">
         <div class = "section-title"><div>Raw Bar </div><button class="del-button" onclick="del_entry(this)">Delete</button></div>
         <div class ="fields">
-            <div class="field">Length in mm <input name="length" class="barLength" value="6000"></input></div>
+            <div class="field">Length in mm <input name="length" class="barLength" value="6000" ></input></div>
             <div class="field">Height in mm<input name="height" class="barHeight" value="30"></input></div>
         </div>
     </div></div>
@@ -43,13 +43,14 @@
 
     <!----------------  CUT --------------------------->
     <div id="cuts-div">
-    <div class="table-responsive col-md-10 section" class="barDiv">
+    <div class="table-responsive col-md-10 section" class="barDiv" id='init_cut'>
         <div class = "section-title"><div>Bar to Cut </div><button class="del-button" onclick="del_entry(this)">Delete</button></div>
         <div class ="fields">
-            <div class="field">Length in mm <input name="cutLength" class="cutLength" value="300"></input></div>
-            <div class="field">Angle 1 in deg<input name="cutAngle1" class="cutAngle1" value="90"></input></div>
-            <div class="field">Angle 1 in deg<input name="cutAngle2" class="cutAngle2" value="90"></input></div>
+            <div class="field">Length in mm <input name="cutLength" class="cutLength" value="300"></div>
+            <div class="field">Angle 1 in deg<input name="cutAngle1" class="cutAngle1" value="90"oninput="shape_cut(this)"></div>
+            <div class="field">Angle 2 in deg<input name="cutAngle2" class="cutAngle2" value="90"oninput="shape_cut(this)"></div>
         </div>
+     <div class="div-cut-shape"><div class="cut-shape1"></div><div class="cut-shape2"></div></div>
     </div></div>
     <button class="add-button" onclick="add_cut()"><img alt="+ ">Add Cut</button>
     
@@ -67,6 +68,19 @@
 
 <script type="text/javascript" src="fitCuts.js"></script>
 <script>
+    function shape_cut(elt){
+        angle = elt.value.toString()
+        if(elt.name == "cutAngle1") {
+            shape = elt.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('cut-shape1')[0];
+        }
+        else {
+            shape = elt.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('cut-shape2')[0];
+        }
+        
+        console.log(shape)
+        shape.style.transform = "skew("+angle+"deg)"
+        
+    }
 
     function compute() {
         var barArray = [];
