@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- https://github.com/vithalreddy/editable-html-table-js/blob/master/index.html -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Dynamic Editable HTML Table using Javascript, Jquery and Bootstrap with add, edit, and Delete Options</title>
+    <!-- CSS files-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+   </head>
+    
+  <body>
+    <div id="header">
+        <a href ="" ><img src ="" alt="&#x2913" style="width:32px;"> Download</a><a href="">Where to cut ?</a><a href ="" >GitHub</a>
+    </div>
+   <script>
+        function del_entry(button){
+            const div = button.parentNode.parentNode;
+            div.remove()
+        }
+    
+        function add_bar(){
+            document.getElementById("bars-div").innerHTML += '<div class="table-responsive col-md-10 section" class="barDiv"><div class = "section-title"><div>Raw Bar </div><button class="del-button" onclick="del_entry(this)">Delete</button></div><div class ="fields"><div class="field">Length in mm <input name="length" class="barLength" value="6000"></input></div><div class="field">Height in mm<input name="height" class="barHeight" value="30"></input></div></div></div>'
+        }
+        
+        function add_cut(){
+            document.getElementById("cuts-div").innerHTML += '<div class="table-responsive col-md-10 section" class="barDiv"><div class = "section-title"><div>Bar to Cut </div><button class="del-button" onclick="del_entry(this)">Delete</button></div><div class ="fields"><div class="field">Length in mm <input name="cutLength" class="cutLength" value="300"></input></div> <div class="field">Angle 1 in deg<input name="cutAngle1" class="cutAngle1" value="90"></input></div><div class="field">Angle 1 in deg<input name="cutAngle2" class="cutAngle2" value="90"></input></div> </div></div>'
+        }
+    </script>
+    
+    <br>
+    <!----------------  BAR --------------------------->
+    <div id="bars-div">
+    <div class="table-responsive col-md-10 section" class="barDiv">
+        <div class = "section-title"><div>Raw Bar </div><button class="del-button" onclick="del_entry(this)">Delete</button></div>
+        <div class ="fields">
+            <div class="field">Length in mm <input name="length" class="barLength" value="6000"></input></div>
+            <div class="field">Height in mm<input name="height" class="barHeight" value="30"></input></div>
+        </div>
+    </div></div>
+    <button class="add-button" onclick="add_bar()"><img alt="+ ">Add Bar</button>
+
+    <!----------------  CUT --------------------------->
+    <div id="cuts-div">
+    <div class="table-responsive col-md-10 section" class="barDiv">
+        <div class = "section-title"><div>Bar to Cut </div><button class="del-button" onclick="del_entry(this)">Delete</button></div>
+        <div class ="fields">
+            <div class="field">Length in mm <input name="cutLength" class="cutLength" value="300"></input></div>
+            <div class="field">Angle 1 in deg<input name="cutAngle1" class="cutAngle1" value="90"></input></div>
+            <div class="field">Angle 1 in deg<input name="cutAngle2" class="cutAngle2" value="90"></input></div>
+        </div>
+    </div></div>
+    <button class="add-button" onclick="add_cut()"><img alt="+ ">Add Cut</button>
+    
+
+<!---------------  SendButton -------------->
+    
+    <!--------------- RES --------------->
+    <div class="table-responsive col-md-10 section" id="res-section">
+        <div class = "section-title"><div>Results</div><button id="submit" class="button" onclick ="compute()">Calculer</button></div>
+        <div id="resDiv"></div>
+    </div>
+            
+
+    <!--JS Files-->
+
+<script type="text/javascript" src="fitCuts.js"></script>
+<script>
+
+    function compute() {
+        var barArray = [];
+        var cutArray = [];
+        var resArray = [];
+       
+        //fill raw material array      
+        var i, lengthArr, heightArr
+        lengthArr = document.getElementsByClassName('barLength');
+        heightArr = document.getElementsByClassName('barHeight');
+
+        for(i=0; i<lengthArr.length; i++) {
+            var length = Number(lengthArr[i].value)
+            var height = Number(heightArr[i].value)
+            barArray.push({ len: length, height: height});
+        } 
+        
+        //fill cuts to perform array
+        var j, lengthCutArr, angle1Arr, angle2Arr
+        lengthCutArr = document.getElementsByClassName('cutLength');
+        angle1Arr = document.getElementsByClassName('cutAngle1');
+        angle2Arr = document.getElementsByClassName('cutAngle2');
+        for(j=0; j<lengthCutArr.length; j++) {
+            var lengthCut = Number(lengthCutArr[j].value)
+            var angle1 = Number(angle1Arr[j].value)
+            var angle2 = Number(angle2Arr[j].value)
+            cutArray.push({ len: lengthCut, angle1: angle1, angle2: angle2});
+        } 
+
+/*
+        //tests
+        barArray.push({ len: 6000, height: 32 });
+        barArray.push({ len: 8000, height: 32 });
+        cutArray.push({ len: 2546, angle1: 45, angle2: 45 });
+        cutArray.push({ len: 2263, angle1: 45, angle2: 45 });
+        cutArray.push({ len: 2869, angle1: 45, angle2: 45 });
+        cutArray.push({ len: 2200, angle1: 45, angle2: 45 });
+        cutArray.push({ len: 2665, angle1: 45, angle2: 45 }); 
+        barArray = sortBars(barArray)
+        cutArray = sortBars(cutArray) 
+        console.log(barArray, cutArray) 
+        var bars, resHtml, res, remainingCuts
+        */
+        //try to fit everything
+        res = fitCutsStandard(barArray, cutArray)
+        console.log("res", res)
+        bars = res['bars']
+        remainingCuts = res['remainingCuts']
+        resHtml = graphRes(bars)
+          
+        resHtml += showRemainingCuts(remainingCuts)
+        document.getElementById("resDiv").innerHTML = resHtml
+    }
+
+</script>
+  </body>
+</html>
