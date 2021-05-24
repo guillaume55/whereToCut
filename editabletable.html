@@ -32,6 +32,7 @@
     <br>
     <!----------------  BAR --------------------------->
     <div id="bars-div">
+        All "height" parameters should be equals for now if you use angle cuts
     <div class="table-responsive col-md-10 section" class="barDiv" id="init_bar">
         <div class = "section-title"><div>Raw Bar </div><button class="del-button" onclick="del_entry(this)">Delete</button></div>
         <div class ="fields">
@@ -105,8 +106,8 @@
         angle2Arr = document.getElementsByClassName('cutAngle2');
         for(j=0; j<lengthCutArr.length; j++) {
             var lengthCut = Number(lengthCutArr[j].value)
-            var angle1 = Number(angle1Arr[j].value)
-            var angle2 = Number(angle2Arr[j].value)
+            var angle1 = 90-Number(angle1Arr[j].value)
+            var angle2 = 90-Number(angle2Arr[j].value)
             cutArray.push({ len: lengthCut, angle1: angle1, angle2: angle2});
         } 
 
@@ -124,15 +125,33 @@
         console.log(barArray, cutArray) 
         var bars, resHtml, res, remainingCuts
         */
-        //try to fit everything
-        res = fitCutsStandard(barArray, cutArray)
+        
+        //if there are angles, try to optimize, if not, fit with the standard method
+        var anglesToOptim
+        anglesToOptim = areThereAngles(cutArray)
+        
+        //impossible to optim if there is no enougth angles with same values or if the shortest cut is shorter than the length we can save
+        if(anglesToOptim.length == 0 || maxOptimLength(barArray, cutArray, anglesToOptim) < cuts[cuts.length-1]['len']) {
+            //try to fit everything
+            console.log("No angled cuts to optimize")
+            res = fitCutsStandard(barArray, cutArray)
+            
+        }
+        else {
+            console.log("Trying to optimize beacuse of angles")
+            console.log()
+            res = fitCutsAngle(barArray, cutArray, anglesToOptim)
+            
+        }
+        finalRes = res
         console.log("res", res)
         bars = res['bars']
         remainingCuts = res['remainingCuts']
         resHtml = graphRes(bars)
-          
+
         resHtml += showRemainingCuts(remainingCuts)
         document.getElementById("resDiv").innerHTML = resHtml
+        //TODO add csv download link
     }
 
 </script>

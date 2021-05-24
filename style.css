@@ -79,6 +79,12 @@ input{
     margin-bottom: 10vh;
 }
 
+
+#delimiter {
+    width: 5%;
+    min-width: 20px;
+}
+
 /********* cut preview **************/
 .cut-shape1, .cut-shape2 {
     height : 5vh;
